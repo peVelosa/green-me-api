@@ -16,6 +16,9 @@ const start = async () => {
         origin: "*",
         methods: ["POST"],
     });
+    app.get("/health-check", async (request, reply) => {
+        return { status: "ok" };
+    });
     app.post("/upload", async (request, reply) => {
         const file = await request.file();
         if (!file)

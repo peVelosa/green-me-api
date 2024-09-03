@@ -9,6 +9,9 @@
     "build": "tsc",
     "start": "node dist/main.js"
   },
+  "exports": {
+    "./lib/open-ai": "./dist/lib/open-ai.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
