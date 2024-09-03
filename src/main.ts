@@ -29,15 +29,13 @@ const start = async () => {
 
     if (!file) return reply.send("No file uploaded");
 
-    const uuid = uuidv4();
+    const chunks = [];
+    for await (const chunk of file.file) {
+      chunks.push(chunk);
+    }
 
-    const fileName = `./uploads/${uuid}.${file.mimetype.split("/")[1]}`;
-
-    await pump(file.file, fs.createWriteStream(fileName));
-
-    const base64_image = fs.readFileSync(fileName, "base64");
-
-    fs.unlinkSync(fileName);
+    const buffer = Buffer.concat(chunks);
+    const base64_image = buffer.toString("base64");
 
     const res = await openai.chat.completions.create({
       model: "gpt-4o",
