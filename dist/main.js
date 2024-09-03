@@ -1,14 +1,5 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import fastify from "fastify";
-import openai from "./lib/open-ai";
+import openai from "./lib/open-ai.js";
 import multipart from "@fastify/multipart";
 import cors from "@fastify/cors";
 import fs from "node:fs";
@@ -19,22 +10,22 @@ const pump = util.promisify(pipeline);
 const app = fastify({
     logger: true,
 });
-const start = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield app.register(multipart);
-    yield app.register(cors, {
+const start = async () => {
+    await app.register(multipart);
+    await app.register(cors, {
         origin: "*",
         methods: ["POST"],
     });
-    app.post("/upload", (request, reply) => __awaiter(void 0, void 0, void 0, function* () {
-        const file = yield request.file();
+    app.post("/upload", async (request, reply) => {
+        const file = await request.file();
         if (!file)
             return reply.send("No file uploaded");
         const uuid = uuidv4();
         const fileName = `./uploads/${uuid}.${file.mimetype.split("/")[1]}`;
-        yield pump(file.file, fs.createWriteStream(fileName));
+        await pump(file.file, fs.createWriteStream(fileName));
         const base64_image = fs.readFileSync(fileName, "base64");
         fs.unlinkSync(fileName);
-        const res = yield openai.chat.completions.create({
+        const res = await openai.chat.completions.create({
             model: "gpt-4o",
             messages: [
                 {
@@ -69,13 +60,13 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
         });
         const text = res.choices[0].message.content;
         return text;
-    }));
+    });
     try {
-        yield app.listen({ port: 3000 });
+        await app.listen({ port: 3000 });
     }
     catch (err) {
         app.log.error(err);
         process.exit(1);
     }
-});
+};
 start();

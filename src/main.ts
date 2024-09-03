@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import openai from "./lib/open-ai";
+import openai from "./lib/open-ai.js";
 import multipart from "@fastify/multipart";
 import cors from "@fastify/cors";
 import fs from "node:fs";
