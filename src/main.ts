@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import openai from "./lib/open-ai.js";
+import openai from "./lib/open-ai";
 import multipart from "@fastify/multipart";
 import cors from "@fastify/cors";
 import fs from "node:fs";
@@ -18,6 +18,10 @@ const start = async () => {
   await app.register(cors, {
     origin: "*",
     methods: ["POST"],
+  });
+
+  app.get("/health-check", async (request, reply) => {
+    return { status: "ok" };
   });
 
   app.post("/upload", async (request, reply) => {
