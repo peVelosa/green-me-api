@@ -43,8 +43,11 @@ const start = async () => {
         {
           role: "assistant",
           content: `You are an AI that recognizes images. You will receive an image of a plant. You need to answer the plant's name and a possible disease that it might have.
-            You must answer in the following format: {
-              "plant_name": string,
+            You must answer in the following format (json): {
+              "type": string (type of the plant),
+              "family": string (family of the plant), 
+              "scientific_name
+              ": string (scientific name of the plant), 
               "disease": string | null,
               "info":{
                 "water_frequency": string (You must use the following values: "daily", "weekly", "monthly" and the frequency. EX: 1x daily),
