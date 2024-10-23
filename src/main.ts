@@ -6,6 +6,7 @@ import fs from "node:fs";
 import util from "util";
 import { pipeline } from "stream";
 import { v4 as uuidv4 } from "uuid";
+import { extractJSON } from "./helpers/index.js";
 
 const pump = util.promisify(pipeline);
 
@@ -41,23 +42,22 @@ const start = async () => {
       model: "gpt-4o",
       messages: [
         {
-          role: "assistant",
-          content: `You are an AI that recognizes images. You will receive an image of a plant. You need to answer the plant's name and a possible disease that it might have.
-            You must answer in the following format (json): {
-              "type": string (type of the plant),
-              "family": string (family of the plant), 
-              "scientific_name
-              ": string (scientific name of the plant), 
-              "disease": string | null,
-              "info":{
-                "water_frequency": string (You must use the following values: "daily", "weekly", "monthly" and the frequency. EX: 1x daily),
-                "light": string (full sun, partial sun, shade),
-                "toxicity": boolean (true, false),
-              },
-              "confidence": number (0-1)
-            }
-            If there is no disease, you can leave the "disease" field if null.
-            If your confidence is less than 0.8, you must retry and re-evaluate the image.
+          role: "system",
+          content: `Você é uma IA que reconhece imagens. Você receberá uma imagem de uma planta. Você precisa responder com o nome da planta e uma possível doença que ela possa ter.
+          Responda **apenas** com um objeto JSON no seguinte formato, sem nenhum texto adicional ou blocos de código: {
+            "type": string (tipo da planta),
+            "family": string (família da planta), 
+            "scientific_name": string (nome científico da planta), 
+            "disease": string | null,
+            "info": {
+              "water_frequency": string (Você deve usar os seguintes valores: "diariamente", "semanalmente", "mensalmente" e a frequência. Ex: 1x diariamente),
+              "light": string (sol pleno, sol parcial, sombra),
+              "toxicity": boolean (true, false)
+            },
+            "confidence": number (0-1)
+          }
+          Se não houver doença, você pode deixar o campo "disease" como null.
+          Se sua confiança for menor que 0.8, responda com { "error": "Confiança baixa, por favor, tente novamente." }
             `,
         },
         {
@@ -76,7 +76,7 @@ const start = async () => {
 
     const text = res.choices[0].message.content;
 
-    return text;
+    return extractJSON(text ?? "");
   });
 
   try {
