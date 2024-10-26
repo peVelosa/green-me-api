@@ -49,15 +49,16 @@ const start = async () => {
             "family": string (família da planta), 
             "scientific_name": string (nome científico da planta), 
             "disease": string | null,
+            "tratment": string | null ("Um tratamento possível para a doença"),
             "info": {
               "water_frequency": string (Você deve usar os seguintes valores: "diariamente", "semanalmente", "mensalmente" e a frequência. Ex: 1x diariamente),
               "light": string (sol pleno, sol parcial, sombra),
-              "toxicity": boolean (true, false)
+              "toxicity": boolean (true, false),
             },
             "confidence": number (0-1)
           }
           Se não houver doença, você pode deixar o campo "disease" como null.
-          Se sua confiança for menor que 0.8, responda com { "error": "Confiança baixa, por favor, tente novamente." }
+          Se sua confiança for menor que 0.8, responda com { "error": "Confiança baixa, por favor, tente novamente." }. Caso não seja uma planta, responda com { "error": "Não é uma planta." }.
             `,
         },
         {
