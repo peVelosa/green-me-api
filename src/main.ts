@@ -48,8 +48,8 @@ const start = async () => {
             "type": string (tipo da planta),
             "family": string (família da planta), 
             "scientific_name": string (nome científico da planta), 
-            "disease": string | null,
-            "tratment": string | null ("Um tratamento possível para a doença"),
+            "disease": string | null (O nome da doença deve ser em portugues),
+            "tratment": string | null (Um tratamento possível para a doença),
             "info": {
               "water_frequency": string (Você deve usar os seguintes valores: "diariamente", "semanalmente", "mensalmente" e a frequência. Ex: 1x diariamente),
               "light": string (sol pleno, sol parcial, sombra),
